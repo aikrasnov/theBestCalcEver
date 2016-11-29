@@ -5,6 +5,8 @@ import javax.swing.*;
 public class CalculatorInterface {
     private JFrame mainFrame;
     private JPanel keyboard;
+    private JPanel outBox;
+    private JLabel statusLabel;
     private JTextField outputBox;
 
     public static void main(String[] args){
@@ -116,30 +118,38 @@ public class CalculatorInterface {
         outputBox.setSize(100, 200);
         outputBox.setLayout(new GridLayout());
 
+        outBox = new JPanel();
+        outBox.setLayout(new GridLayout(2,2));
+        outBox.add(outputBox);
+
+        statusLabel = new JLabel();
+        statusLabel.setText("Еще не вычислялось");
+        outBox.add(statusLabel);
 
         mainFrame.add(keyboard);
-        mainFrame.add(outputBox);
+        mainFrame.add(outBox);
         mainFrame.setVisible(true);
     }
 
-    public class ActionListenerCalculate implements ActionListener {
+    class ActionListenerCalculate implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             try {
                 outputBox.setText(Calculator.calculateExpression(outputBox.getText()));
+                statusLabel.setText("OK");
             }
             catch (NotAvailableOperator | NotValidString | TooManyOperators | TooManyOperands | UnexpectedErrorInString exp) {
-                outputBox.setText(exp.getMessage());
+                statusLabel.setText(exp.getMessage());
             }
         }
     }
 
-    public class ActionListenerClear implements ActionListener {
+    class ActionListenerClear implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             outputBox.setText("");
         }
     }
 
-    public class ActionListenerNumeric implements ActionListener {
+    class ActionListenerNumeric implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String oldText = new String();
             oldText = outputBox.getText();
